@@ -1,0 +1,99 @@
+def lovely_elements(seq):
+    if not seq:
+        return ()
+    else:
+        return tree00(seq[0]) + lovely_elements(seq[1:])
+
+def tree00(el):
+    if len(str(el)) < 3:
+        return ()
+    elif str(el)[::-1][2] == '3':
+        return (el,)
+    else:
+        return ()
+
+
+
+def full_names(sur, fns):
+    if not fns:
+        return ()
+    else:
+        return (fns[0] + ' ' + sur,) + full_names(sur, fns[1:])
+
+
+def official_name(seq):
+    if len(seq) == 1:
+        if seq[0].lower() in ('of', 'in', 'for', 'the', 'ng', 'de'):
+            return seq[0].lower()
+        else:
+            return seq[0][0].upper() + seq[0][1:].lower()
+    elif seq[0].lower() in ('of', 'in', 'for', 'the', 'ng', 'de'):
+        return seq[0].lower() + ' ' + official_name(seq[1:])
+    else:
+        return seq[0][0].upper() + seq[0][1:].lower() + ' ' + official_name(seq[1:])
+
+
+def passers(pg, studs):
+    if not studs:
+        return ()
+    else:
+        if studs[0][1] >= pg:
+            return (studs[0][0],) + passers(pg, studs[1:])
+        else:
+            return passers(pg, studs[1:])
+
+
+def success(x1, y1, x2, y2, dart_coords):
+    if not dart_coords:
+        return ()
+    elif (x1 <= dart_coords[0][0] & dart_coords[0][0] <= x2) & (y1 <= dart_coords[0][1] & dart_coords[0][1] <= y2):
+        return (dart_coords[0],) + success(x1, y1, x2, y2, dart_coords[1:])
+    else:
+        return ((),) + success(x1, y1, x2, y2, dart_coords[1:])
+
+def strkglue(seq):
+    if () not in seq:
+        return (seq,)
+    elif len(seq) == 0:
+        return ()
+    elif seq.index(()) != seq[::-1].index(()):
+        if seq[0] == ():
+            return strkglue(seq[1:])
+        else:
+            return (seq[:seq.index(())],) + strkglue(seq[seq.index(())+1:])
+    elif seq[0] == ():
+        if len(seq) == 1:
+            return ()
+        else:
+            return strkglue(seq[1:])
+    elif seq.index(()) == len(seq) - 1:
+        return seq[:seq.index(())]
+    else:
+        return ()
+
+def streaks(x1, y1, x2, y2, dart_coords):
+    return strkglue(success(x1, y1, x2, y2, dart_coords))
+
+
+def substr_locations(s, t):
+    if s[len(s)-1] == '`':
+        return ()
+    elif t in s:
+        def f(i):
+            if i < len(s) and t in s:
+                s = '`'*i + s[i:]
+                return (s.index(t),) + f(i+1)
+            else:
+                return ()
+        return f(0)
+    else:
+        return ()
+
+
+def take_orders(menu, orders):
+    if not orders:
+        return ()
+    elif orders[0] in menu:
+        return (True,) + take_orders(menu[:menu.index(orders[0])] + menu[menu.index(orders[0])+1:], orders[1:])
+    else:
+        return (False,) + take_orders(menu, orders[1:])
