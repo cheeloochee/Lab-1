@@ -1,0 +1,66 @@
+def compare(x, y):
+    if x < y: return '<'
+    elif x == y: return '='
+    elif x > y: return '>'
+
+def check_comparison(x, comp, y):
+    if comp == '<=': return x <= y
+    elif comp == '>=': return x >= y
+    elif comp == '<': return x < y
+    elif comp == '>': return x > y 
+    elif comp == '=': return x == y
+
+def _strofints(expression):
+    if not expression:
+        return ''
+    elif expression[0] == ' ':
+        return '' + _strofints(expression[1:])
+    elif expression[:2] in ('<=', '>='):
+        return ' ' + expression[:2] + ' ' + _strofints(expression[2:])
+    elif expression[0] in ('<', '>', '='):
+        return ' ' + expression[0] + ' ' + _strofints(expression[1:])
+    else:
+        return expression[0] + _strofints(expression[1:])
+
+def _tuplize(stri):
+    if not stri:
+        return ()
+    elif ' ' in stri:
+        return (stri[:stri.index(' ')],) + _tuplize(stri[stri.index(' ')+1:])
+    elif ' ' not in stri:
+        return (stri,)
+    else:
+        return ()
+
+def tokenize_comparisons(stri):
+    return _tuplize(_strofints(stri))
+
+def get_individual_comparisons(stri):
+    return tuple(
+        (int(a), b, int(c))
+        for (a, b, c) in tuple(
+        tokenize_comparisons(stri)[i:j]
+        for j in range(len(tokenize_comparisons(stri))+1)
+        for i in range(j-2)
+        if j-i == 3 and tokenize_comparisons(stri)[i+1] in ('<', '>', '=', '<=', '>=')
+    ))
+
+def check_comparison_chain(stri):
+    if False in tuple(
+        check_comparison(*seq) 
+        for seq in get_individual_comparisons(stri)
+    ): 
+        return False
+    else: 
+        return True
+
+def hill_heights_visited_s(h, s): 
+    return tuple(
+        h[m:n+1:s] 
+        for (m,n) in frozenset((t[0], t[len(t)-1]) 
+            for t in [tuple(range(i,j))[::s] 
+                for j in range(len(h)+1) 
+                for i in range(j) 
+                if len(h[i:j:s]) > 1]
+            )
+        )
