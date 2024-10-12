@@ -1,0 +1,161 @@
+'''who lives in a pineapple under the sea,
+absorbent and yellow and porous as he?
+if nautical nonsense be something you wish,
+then DROP on the deck and flop like a fish!'''
+
+def triangle_kind(a, b, c):
+    if not (a + b > c and b + c > a and c + a > b):
+        return 'degenerate'
+    elif a == b == c:
+        return 'equilateral'
+    elif a == b or b == c or c == a:
+        return 'isosceles'
+    else:
+        return 'scalene'
+
+# B1
+
+def take_all_and_count(items, itbw):
+    return (taac(items, itbw, 0), noitbb(items, itbw, 0))
+
+def taac(items, itbw, i): # itbw = item that becky wants
+    if not items:
+        return ()
+    elif i == len(items):
+        return ()
+    elif items[i].lower() == itbw.lower():
+        return taac(items, itbw, i+1)
+    else:
+        return (items[i],) + taac(items, itbw, i+1)
+
+def noitbb(items, itbw, i): # noitbb = number of items that becky bought
+    if not items:
+        return 0
+    elif i == len(items):
+        return 0
+    elif items[i].lower() == itbw.lower():
+        return 1 + noitbb(items, itbw, i+1)
+    else:
+        return 0 + noitbb(items, itbw, i+1)
+
+# B2 (rename function)
+
+def taacc(items, itbw):
+    return (tuple(item for item in items if item.lower() != itbw.lower()), 
+        len(tuple(item for item in items if item.lower() == itbw.lower())))
+
+# B3
+
+def multiset_counts(seq):
+    return tuple(
+        (seq[i], len(tuple(k for k in seq if k == seq[i]))) 
+        for i in range(len(seq))
+        if seq[i] not in seq[:i]
+    )
+
+# B4 (mahirap!)
+
+def multiset_differences(sex, sey):
+    dxy = f(sex, sey)
+    dyx = f(sey, sex)
+    dxyudyx = dxy + dyx
+    return (dxy, dyx, dxyudyx)
+
+def f(sex, sey):
+    msex = multiset_counts(sex)
+    msey = multiset_counts(sey)
+    d = tuple( # no common
+        (i,j)
+        for (i,j) in msex
+        if i not in tuple(g for (g, h) in msey)  
+    ) + tuple(
+        (i, j-h)
+        for (i,j) in msex
+        for (g,h) in msey
+        if i == g)
+    return tuple(
+        w for wat in tuple(
+            (i,)*j
+            for (i,j) in d
+            if j > 0
+        ) for w in wat
+    )
+
+# C1
+
+def evaluate_expr(exp, a, b, c):
+    (x, y) = tuped(exp)
+    m = isitint(x, a, b, c)
+    n = isitint(y, a, b, c)
+    if exp[0] == 'A':
+        return m + n
+    elif exp[0] == 'S':
+        return m - n 
+    else:
+        return m * n 
+
+def tuped(exp):
+    inf = exp[exp.index('(') + 1 : len(exp)-1]
+    if inf.index(')') != len(inf)-1 and inf.index(')') != inf.index('))'):
+        return (inf[: inf.index(')') + 1], inf[inf.index(')') + 2:])
+
+def isitint(var, a, b, c):
+    if var in 'abc':
+        return (a if var == 'a' else b if var == 'b' else c)
+    else:
+        try:
+            return int(var)
+        except:
+            return evaluate_expr(var, a, b, c)
+
+print(tuped("A(3,M(2,b))"))
+
+# D1
+
+def mid_splits(seq):
+    return frozenset(
+        (seq[:i],) + (seq[i:j],) + (seq[j:],)
+        for j in range(len(seq))
+        for i in range(1,j)
+        if sum(seq[i:j]) >= sum(seq[:i]) and sum(seq[i:j]) >= sum(seq[j:]) 
+    )
+
+def splits2(toys):
+    def f(i):
+        if i < 2**len(toys):
+            return ('0' * (len(bin(2**len(toys)-1)) - len(bin(i))) + bin(i)[2:],) + f(i+1)
+        else:
+            return ()
+    apdot = f(0) # all possible distributions of toys
+    def g(i):
+        if i < len(apdot):
+            return ((oa0(apdot[i], toys, 0), oa1(apdot[i], toys, 0)),) + g(i+1)
+        else:
+            return ()
+    return (() if not toys else frozenset(g(0)))
+
+def oa1(byte, seq, i):
+    if not byte:
+        return ()
+    elif i == len(byte):
+        return ()
+    elif '1' not in byte[i:]:
+        return ()
+    elif byte[i] == '1':
+        return (seq[i],) + oa1(byte, seq, i+1)
+    else:
+        return oa1(byte, seq, i+1)
+
+def oa0(byte, seq, i):
+    if not byte:
+        return ()
+    elif i == len(byte):
+        return ()
+    elif '0' not in byte[i:]:
+        return ()
+    elif byte[i] == '0':
+        return (seq[i],) + oa0(byte, seq, i+1)
+    else:
+        return oa0(byte, seq, i+1)
+
+print(splits2(('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k')))
