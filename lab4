@@ -1,0 +1,121 @@
+def last_letters(words):
+    acs = ''
+    for i in range(len(words)):
+        acs += words[i][len(words[i])-1]
+    return acs
+
+def markdown_file_bases(filenames):
+    lomdf = []
+    for i in range(len(filenames)):
+        if filenames[i][-3:] == '.md':
+            lomdf.append(filenames[i][:-3])
+    return lomdf
+
+def fibs(n):
+    if n < 2:
+        return [0,1][:n]
+    else:
+        lofn = [0,1]
+        for i in range(2, n):
+            lofn.append(lofn[i-2] + lofn[i-1])
+        return lofn
+
+def divisible_by_exactly_one(x, y, u, v):
+    for i in range(x, y+1):
+        if (i % u == 0) ^ (i % v == 0):
+            print(i)
+
+def seq_join(seqs):
+    loeias = []
+    for seq in seqs:
+        for item in seq:
+            loeias.append(item)
+    return loeias
+
+def partial_sums(seq):
+    lops = [0,]
+    for i in range(1, len(seq)+1):
+        lops.append(lops[i-1] + seq[i-1])
+    return lops
+
+def print_all_palindromes(words):
+    for i in range(len(words)):
+        if words[i].lower() == words[i][::-1].lower():
+            print(words[i])
+
+def peaks(heights):
+    lohopb = []
+    for i in range(1, len(heights)-1):
+        if (heights[i-1] < heights[i]) and (heights[i] > heights[i+1]):
+            lohopb.append(i)
+    return lohopb
+
+def uniquify(seq):
+    loue = []
+    for i in range(len(seq)-1):
+        if seq[i] != seq[i+1]:
+            loue.append(seq[i])
+    if seq:
+        loue.append(seq[-1])
+    return loue
+
+def longest_streak(names): # MALI FUCK YOU TANGINAMO MAGSSTAT NAKO
+    loi = [0,]
+    for i in range(1, len(names)):
+        if names[i-1] != names[i]:
+            loi.append(i)
+    if sum(loi) != len(names):
+        loi.append(len(names))
+    los = []
+    for j in range(1, len(loi)): 
+        los.append(loi[j] - loi[j-1])
+    if los: 
+        return max(los)
+    else: 
+        return 0
+
+def make_list_with_updates(n, updates):
+    ilo0 = [0,] * n
+    for (i, r) in updates:
+        ilo0[i] = r 
+    return ilo0
+
+def group_by_last_digit(nums):
+    told = ([],[],[],[],[],[],[],[],[],[])
+    for num in nums:
+        told[num % 10].append(num)
+    return told
+
+def reverse_words(text):
+    tow = text.split()
+    lorw = []
+    for word in tow:
+        lorw.append(word[::-1])
+    return ' '.join(lorw)
+
+def sum_mins(seq): # Memory Error
+    loasa = []
+    for j in range(len(seq)):
+        for i in range(j+1):
+            loasa.append(seq[i:j+1])
+    loampesa = []
+    for k in range(len(loasa)):
+        loampesa.append(min(loasa[k]))
+    return sum(loampesa)
+
+def sum_2nd_mins(seq): # Timeout
+    def slv(seq):
+        seq = seq[seq.index(min(seq))+1:] + seq[:seq.index(min(seq))]
+        return min(seq)
+    loasa = []
+    for j in range(len(seq)):
+        for i in range(j):
+            loasa.append(seq[i:j+1])
+    loampesa = []
+    for k in range(len(loasa)):
+        loampesa.append(slv(loasa[k]))
+    return sum(loampesa)
+
+
+
+
